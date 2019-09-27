@@ -1,30 +1,32 @@
 {
-	"name": "unicorn-fun",
-	"version": "0.0.0",
-	"description": "My awesome module",
+	"name": "sefaz-communicator",
+	"version": "1.0.0",
+	"description": "Simple way to communicate with SEFAZ SOAP web services",
 	"license": "MIT",
-	"repository": "YOUR-GITHUB-USERNAME/unicorn-fun",
+	"repository": "andreiox/sefaz-communicator",
 	"author": {
-		"name": "YOUR NAME",
-		"email": "YOUR EMAIL",
-		"url": "YOUR WEBSITE"
+		"name": "Andre Macedo",
+		"email": "contato@andremacedo.dev",
+		"url": "https://andremacedo.dev"
 	},
 	"engines": {
 		"node": ">=8"
 	},
 	"scripts": {
-		"test": "xo && ava"
+		"test": "ava"
 	},
 	"files": [
 		"index.js"
 	],
 	"keywords": [
-		"unicorn",
-		"fun"
+		"sefaz",
+		"communication",
+		"soap"
 	],
-	"dependencies": {},
+	"dependencies": {
+		"soap": "^0.29.0"
+	},
 	"devDependencies": {
-		"ava": "^2.1.0",
-		"xo": "^0.24.0"
+		"ava": "^2.1.0"
 	}
 }

@@ -1,13 +1,31 @@
-import test from 'ava';
-import unicornFun from '.';
+import test from 'ava'
+import sefaz from '.'
 
-test('main', t => {
-	t.throws(() => {
-		unicornFun(123);
-	}, {
+test('TypeError', async t => {
+	t.plan(6)
+
+	await t.throwsAsync(sefaz(123), {
 		instanceOf: TypeError,
-		message: 'Expected a string, got number'
-	});
+		message: 'Expected a string for url, got number'
+	})
 
-	t.is(unicornFun('unicorns'), 'unicorns & rainbows');
-});
+	await t.throwsAsync(sefaz('string', 'base64string'), {
+		instanceOf: TypeError,
+		message: 'Expected a Buffer for certificate, got string'
+	})
+
+	await t.throwsAsync(sefaz('url', Buffer.from('cert'), 123), {
+		instanceOf: TypeError,
+		message: 'Expected a string for password, got number'
+	})
+
+	await t.throwsAsync(sefaz('url', Buffer.from('cert'), 'password', 123), {
+		instanceOf: TypeError,
+		message: 'Expected a string for func, got number'
+	})
+
+	await t.throwsAsync(sefaz('url', Buffer.from('cert'), 'password', 'function', 123), {
+		instanceOf: TypeError,
+		message: 'Expected a string for xml, got number'
+	})
+})
