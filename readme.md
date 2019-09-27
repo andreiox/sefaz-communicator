@@ -1,71 +1,61 @@
-# node-module-boilerplate
+# sefaz-communicator
 
-> Boilerplate to kickstart creating a Node.js module
-
-This is what I use for [my own modules](https://www.npmjs.com/~sindresorhus).
-
-Also check out [`node-cli-boilerplate`](https://github.com/sindresorhus/node-cli-boilerplate).
-
-
-## Getting started
-
-**Click the "Use this template" button.**
-
-Alternatively, create a new directory and then run:
-
-```
-$ curl -fsSL https://github.com/sindresorhus/node-module-boilerplate/archive/master.tar.gz | tar -xz --strip-components=1
-```
-
-There's also a [Yeoman generator](https://github.com/sindresorhus/generator-nm).
-
-
----
-
-**Remove everything from here and above**
-
----
-
-
-# unicorn-fun [![Build Status](https://travis-ci.com/YOUR-GITHUB-USERNAME/unicorn-fun.svg?branch=master)](https://travis-ci.com/YOUR-GITHUB-USERNAME/unicorn-fun)
-
-> My awesome module
-
+> Simple way to communicate with SEFAZ SOAP web services
 
 ## Install
 
+```shell
+npm install sefaz-communicator
 ```
-$ npm install unicorn-fun
-```
-
 
 ## Usage
 
 ```js
-const unicornFun = require('unicorn-fun');
+const sefaz = require('sefaz-communicator');
 
-unicornFun('unicorns');
-//=> 'unicorns & rainbows'
+const url = 'https://hnfe.sefaz.ba.gov.br/webservices/NFeStatusServico4/NFeStatusServico4.asmx'
+const certificate = Buffer.from('Pfx certificate in base64 string', 'base64')
+const password = 'password'
+const func = 'nfeStatusServicoNF'
+const xml = `<consStatServ xmlns="http://www.portalfiscal.inf.br/nfe" versao="4.00">
+                <tpAmb>2</tpAmb>
+                <cUF>29</cUF>
+                <xServ>STATUS</xServ>
+             </consStatServ>`
+
+const response = await sefaz(url, certificate, password, func, xml)
 ```
-
 
 ## API
 
-### unicornFun(input, options?)
+### sefaz(url, certificate, password, func, xml)
 
-#### input
+#### url
 
 Type: `string`
 
-Lorem ipsum.
+Web service URL
 
-#### options
+#### certificate
 
-Type: `object`
+Type: `Buffer`
 
-##### postfix
+Pfx Certificate as Buffer
 
-Type: `string`<br>
-Default: `rainbows`
+#### password
 
-Lorem ipsum.
+Type: `Buffer`
+
+Certificate password
+
+#### method
+
+Type: `string`
+
+Name of Wsdl Method
+
+#### xml
+
+Type: `string`
+
+Payload xml
