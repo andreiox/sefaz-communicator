@@ -4,6 +4,9 @@ const soap = require('soap')
 
 module.exports = async (url, certificate, password, func, xml) => {
 	validateParams(url, certificate, password, func, xml)
+	if (!url.endsWith('?wsdl')) {
+		url += '?wsdl'
+	}
 
 	const security = new soap.ClientSSLSecurityPFX(certificate, password)
 	const options = { disableCache: true, wsdl_options: { pfx: certificate, passphrase: password } }
