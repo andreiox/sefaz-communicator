@@ -2,7 +2,7 @@ import test from 'ava'
 import sefaz from '.'
 
 test('TypeError', async t => {
-	t.plan(6)
+	t.plan(5)
 
 	await t.throwsAsync(sefaz(123), {
 		instanceOf: TypeError,
