@@ -44,7 +44,7 @@ Pfx Certificate as Buffer
 
 #### password
 
-Type: `Buffer`
+Type: `string`
 
 Certificate password
 
