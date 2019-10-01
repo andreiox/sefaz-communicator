@@ -9,7 +9,11 @@ module.exports = async (url, certificate, password, func, xml) => {
 	}
 
 	const security = new soap.ClientSSLSecurityPFX(certificate, password)
-	const options = { disableCache: true, wsdl_options: { pfx: certificate, passphrase: password } }
+	const options = {
+		escapeXML: false,
+		disableCache: true,
+		wsdl_options: { pfx: certificate, passphrase: password },
+	}
 
 	const client = await soap.createClientAsync(url, options)
 	client.setSecurity(security)
