@@ -2,8 +2,8 @@
 
 const soap = require('soap')
 
-module.exports = async (url, certificate, password, func, xml) => {
-	validateParams(url, certificate, password, func, xml)
+module.exports = async (url, certificate, password, method, message) => {
+	validateParams(url, certificate, password, method, message)
 	if (!url.endsWith('?wsdl')) {
 		url += '?wsdl'
 	}
@@ -11,6 +11,7 @@ module.exports = async (url, certificate, password, func, xml) => {
 	const security = new soap.ClientSSLSecurityPFX(certificate, password)
 	const options = {
 		escapeXML: false,
+		returnFault: true,
 		disableCache: true,
 		wsdl_options: { pfx: certificate, passphrase: password },
 	}
@@ -18,11 +19,11 @@ module.exports = async (url, certificate, password, func, xml) => {
 	const client = await soap.createClientAsync(url, options)
 	client.setSecurity(security)
 
-	const response = await client[`${func}Async`]({ $xml: xml })
+	const response = await client[`${method}Async`](message)
 	return response[0]
 }
 
-const validateParams = (url, certificate, password, func, xml) => {
+const validateParams = (url, certificate, password, method, message) => {
 	if (typeof url !== 'string') {
 		throw new TypeError(`Expected a string for url, got ${typeof url}`)
 	}
@@ -35,11 +36,11 @@ const validateParams = (url, certificate, password, func, xml) => {
 		throw new TypeError(`Expected a string for password, got ${typeof password}`)
 	}
 
-	if (typeof func !== 'string') {
-		throw new TypeError(`Expected a string for func, got ${typeof func}`)
+	if (typeof method !== 'string') {
+		throw new TypeError(`Expected a string for method, got ${typeof method}`)
 	}
 
-	if (typeof xml !== 'string') {
-		throw new TypeError(`Expected a string for xml, got ${typeof xml}`)
+	if (typeof message !== 'object') {
+		throw new TypeError(`Expected a object for message, got ${typeof message}`)
 	}
 }

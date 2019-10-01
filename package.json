@@ -1,6 +1,6 @@
 {
 	"name": "sefaz-communicator",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Simple way to communicate with SEFAZ SOAP web services",
 	"license": "MIT",
 	"repository": "andreiox/sefaz-communicator",

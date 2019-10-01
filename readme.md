@@ -16,19 +16,21 @@ const sefaz = require('sefaz-communicator');
 const url = 'https://hnfe.sefaz.ba.gov.br/webservices/NFeStatusServico4/NFeStatusServico4.asmx'
 const certificate = Buffer.from('Pfx certificate in base64 string', 'base64')
 const password = 'password'
-const func = 'nfeStatusServicoNF'
-const xml = `<consStatServ xmlns="http://www.portalfiscal.inf.br/nfe" versao="4.00">
-                <tpAmb>2</tpAmb>
-                <cUF>29</cUF>
-                <xServ>STATUS</xServ>
-             </consStatServ>`
+const method = 'nfeStatusServicoNF'
+const message = {
+   $xml: `<consStatServ xmlns="http://www.portalfiscal.inf.br/nfe" versao="4.00">
+            <tpAmb>2</tpAmb>
+            <cUF>29</cUF>
+            <xServ>STATUS</xServ>
+          </consStatServ>`
+}
 
-const response = await sefaz(url, certificate, password, func, xml)
+const response = await sefaz(url, certificate, password, method, message)
 ```
 
 ## API
 
-### sefaz(url, certificate, password, func, xml)
+### sefaz(url, certificate, password, method, message)
 
 #### url
 
@@ -54,8 +56,13 @@ Type: `string`
 
 Name of Wsdl Method
 
-#### xml
+#### message
 
-Type: `string`
+Type: `object`
 
-Payload xml
+Examples
+> message: { $xml: '<?xml>...'}
+
+or
+
+> message: { nfeDadosMsg: '<?xml>...'}
