@@ -2,7 +2,7 @@ import test from 'ava'
 import sefaz from '.'
 
 test('TypeError', async t => {
-	t.plan(5)
+	t.plan(6)
 
 	await t.throwsAsync(sefaz(123), {
 		instanceOf: TypeError,
@@ -27,5 +27,10 @@ test('TypeError', async t => {
 	await t.throwsAsync(sefaz('url', Buffer.from('cert'), 'password', 'method', 123), {
 		instanceOf: TypeError,
 		message: 'Expected a object for message, got number'
+	})
+
+	await t.throwsAsync(sefaz('url', Buffer.from('cert'), 'password', 'method', { $xml: 'message' }, [1123]), {
+		instanceOf: TypeError,
+		message: 'Expected a string for header, got number'
 	})
 })

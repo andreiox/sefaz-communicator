@@ -2,8 +2,8 @@
 
 const soap = require('soap')
 
-module.exports = async (url, certificate, password, method, message) => {
-	validateParams(url, certificate, password, method, message)
+module.exports = async (url, certificate, password, method, message, headers = []) => {
+	validateParams(url, certificate, password, method, message, headers)
 	if (!url.endsWith('?wsdl')) {
 		url += '?wsdl'
 	}
@@ -18,12 +18,13 @@ module.exports = async (url, certificate, password, method, message) => {
 
 	const client = await soap.createClientAsync(url, options)
 	client.setSecurity(security)
+	headers.forEach(header => client.addSoapHeader(header))
 
 	const response = await client[`${method}Async`](message)
 	return response[0]
 }
 
-const validateParams = (url, certificate, password, method, message) => {
+const validateParams = (url, certificate, password, method, message, headers) => {
 	if (typeof url !== 'string') {
 		throw new TypeError(`Expected a string for url, got ${typeof url}`)
 	}
@@ -43,4 +44,10 @@ const validateParams = (url, certificate, password, method, message) => {
 	if (typeof message !== 'object') {
 		throw new TypeError(`Expected a object for message, got ${typeof message}`)
 	}
+
+	headers.forEach(header => {
+		if (typeof header !== 'string') {
+			throw new TypeError(`Expected a string for header, got ${typeof header}`)
+		}
+	})
 }

@@ -11,7 +11,7 @@ npm install sefaz-communicator
 ## Usage
 
 ```js
-const sefaz = require('sefaz-communicator');
+const sefaz = require('sefaz-communicator')
 
 const url = 'https://hnfe.sefaz.ba.gov.br/webservices/NFeStatusServico4/NFeStatusServico4.asmx'
 const certificate = Buffer.from('Pfx certificate in base64 string', 'base64')
@@ -30,7 +30,7 @@ const response = await sefaz(url, certificate, password, method, message)
 
 ## API
 
-### sefaz(url, certificate, password, method, message)
+### sefaz(url, certificate, password, method, message, headers)
 
 #### url
 
@@ -66,3 +66,12 @@ Examples
 or
 
 > message: { nfeDadosMsg: '<?xml>...'}
+
+#### (optional) headers
+
+Type: `string array`
+
+Headers in xml
+
+Example
+> headers: ['`<cteCabecMsg>...</cteCabecMsg>`']
