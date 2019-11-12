@@ -2,9 +2,9 @@
 
 const soap = require('soap')
 
-module.exports = async (url, certificate, password, method, message, headers = []) => {
-	validateParams(url, certificate, password, method, message, headers)
-	if (!url.endsWith('?wsdl')) {
+module.exports = async (url, certificate, password, methodName, message, headers = []) => {
+	validateParams(url, certificate, password, methodName, message, headers)
+	if (!url.endsWith('?wsdl') && !url.endsWith('?WSDL')) {
 		url += '?wsdl'
 	}
 
@@ -16,15 +16,33 @@ module.exports = async (url, certificate, password, method, message, headers = [
 		wsdl_options: { pfx: certificate, passphrase: password },
 	}
 
-	const client = await soap.createClientAsync(url, options)
-	client.setSecurity(security)
-	headers.forEach(header => client.addSoapHeader(header))
+	return new Promise((resolve, reject) => {
+		soap.createClient(url, options, function (err, client) {
+			client.setSecurity(security)
+			headers.forEach(header => client.addSoapHeader(header))
 
-	const response = await client[`${method}Async`](message)
-	return response[0]
+			const service = Object.values(client.wsdl.definitions.services)[0]
+			const port = Object.values(service.ports)[0]
+
+			const method = port.binding.methods[methodName]
+			let location = port.location
+			if (location.startsWith('http:')) {
+				location = location.replace('http:', 'https:')
+			}
+
+			const func = client._defineMethod(method, location)
+			func(message, options, function (methodError, result) {
+				if (methodError) {
+					reject(methodError)
+				}
+
+				resolve(result)
+			})
+		})
+	})
 }
 
-const validateParams = (url, certificate, password, method, message, headers) => {
+const validateParams = (url, certificate, password, methodName, message, headers) => {
 	if (typeof url !== 'string') {
 		throw new TypeError(`Expected a string for url, got ${typeof url}`)
 	}
@@ -37,8 +55,8 @@ const validateParams = (url, certificate, password, method, message, headers) =>
 		throw new TypeError(`Expected a string for password, got ${typeof password}`)
 	}
 
-	if (typeof method !== 'string') {
-		throw new TypeError(`Expected a string for method, got ${typeof method}`)
+	if (typeof methodName !== 'string') {
+		throw new TypeError(`Expected a string for methodName, got ${typeof methodName}`)
 	}
 
 	if (typeof message !== 'object') {

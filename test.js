@@ -21,15 +21,15 @@ test('TypeError', async t => {
 
 	await t.throwsAsync(sefaz('url', Buffer.from('cert'), 'password', 123), {
 		instanceOf: TypeError,
-		message: 'Expected a string for method, got number'
+		message: 'Expected a string for methodName, got number'
 	})
 
-	await t.throwsAsync(sefaz('url', Buffer.from('cert'), 'password', 'method', 123), {
+	await t.throwsAsync(sefaz('url', Buffer.from('cert'), 'password', 'methodName', 123), {
 		instanceOf: TypeError,
 		message: 'Expected a object for message, got number'
 	})
 
-	await t.throwsAsync(sefaz('url', Buffer.from('cert'), 'password', 'method', { $xml: 'message' }, [1123]), {
+	await t.throwsAsync(sefaz('url', Buffer.from('cert'), 'password', 'methodName', { $xml: 'message' }, [1123]), {
 		instanceOf: TypeError,
 		message: 'Expected a string for header, got number'
 	})
