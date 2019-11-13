@@ -13,6 +13,7 @@ module.exports = async (url, certificate, password, methodName, message, headers
 		escapeXML: false,
 		returnFault: true,
 		disableCache: true,
+		forceSoap12Headers: true,
 		wsdl_options: { pfx: certificate, passphrase: password },
 	}
 
