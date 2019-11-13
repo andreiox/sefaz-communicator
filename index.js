@@ -14,6 +14,7 @@ module.exports = async (url, certificate, password, methodName, message, headers
 		returnFault: true,
 		disableCache: true,
 		forceSoap12Headers: true,
+		headers: { 'Content-Type': 'application/soap+xml' },
 		wsdl_options: { pfx: certificate, passphrase: password },
 	}
 
@@ -26,7 +27,7 @@ module.exports = async (url, certificate, password, methodName, message, headers
 			const port = Object.values(service.ports)[0]
 
 			const method = port.binding.methods[methodName]
-			let location = port.location
+			let location = port.location.replace(':80', '')
 			if (location.startsWith('http:')) {
 				location = location.replace('http:', 'https:')
 			}
