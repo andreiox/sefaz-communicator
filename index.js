@@ -8,7 +8,18 @@ module.exports = async (url, certificate, password, methodName, message, headers
 		url += '?wsdl'
 	}
 
-	const security = new soap.ClientSSLSecurityPFX(certificate, password)
+	const client = await createSoapClient(url, certificate, password, headers)
+	const method = createSoapMethod(client, methodName)
+
+	return new Promise((resolve, reject) => {
+		method(message, (err, result) => {
+			if (err) return reject(err)
+			resolve(result)
+		})
+	})
+}
+
+async function createSoapClient(url, certificate, password, headers) {
 	const options = {
 		escapeXML: false,
 		returnFault: true,
@@ -18,30 +29,24 @@ module.exports = async (url, certificate, password, methodName, message, headers
 		wsdl_options: { pfx: certificate, passphrase: password },
 	}
 
-	return new Promise((resolve, reject) => {
-		soap.createClient(url, options, function (err, client) {
-			client.setSecurity(security)
-			headers.forEach(header => client.addSoapHeader(header))
+	const client = await soap.createClientAsync(url, options)
+	client.setSecurity(new soap.ClientSSLSecurityPFX(certificate, password))
+	headers.forEach(header => client.addSoapHeader(header))
 
-			const service = Object.values(client.wsdl.definitions.services)[0]
-			const port = Object.values(service.ports)[0]
+	return client
+}
 
-			const method = port.binding.methods[methodName]
-			let location = port.location.replace(':80', '')
-			if (location.startsWith('http:')) {
-				location = location.replace('http:', 'https:')
-			}
+function createSoapMethod(client, methodName) {
+	const service = Object.values(client.wsdl.definitions.services)[0]
+	const port = Object.values(service.ports)[0]
 
-			const func = client._defineMethod(method, location)
-			func(message, options, function (methodError, result) {
-				if (methodError) {
-					reject(methodError)
-				}
+	const method = port.binding.methods[methodName]
+	let location = port.location.replace(':80', '')
+	if (location.startsWith('http:')) {
+		location = location.replace('http:', 'https:')
+	}
 
-				resolve(result)
-			})
-		})
-	})
+	return client._defineMethod(method, location)
 }
 
 const validateParams = (url, certificate, password, methodName, message, headers) => {
