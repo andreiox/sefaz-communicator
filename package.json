@@ -1,6 +1,6 @@
 {
 	"name": "sefaz-communicator",
-	"version": "1.0.6",
+	"version": "1.0.7",
 	"description": "Simple way to communicate with SEFAZ SOAP web services",
 	"license": "MIT",
 	"repository": "andreiox/sefaz-communicator",
@@ -16,7 +16,8 @@
 		"test": "ava"
 	},
 	"files": [
-		"index.js"
+		"index.js",
+        "index.d.ts"
 	],
 	"keywords": [
 		"sefaz",
