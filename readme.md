@@ -25,12 +25,12 @@ const message = {
           </consStatServ>`
 }
 
-const response = await sefaz(url, certificate, password, method, message)
+const response = await sefaz.communicate(url, certificate, password, method, message)
 ```
 
 ## API
 
-### sefaz(url, certificate, password, method, message, headers)
+### communicate(url, certificate, password, method, message, headers)
 
 #### url
 

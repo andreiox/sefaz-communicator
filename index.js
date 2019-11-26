@@ -2,7 +2,7 @@
 
 const soap = require('soap')
 
-module.exports = async (url, certificate, password, methodName, message, headers = []) => {
+exports.communicate = async (url, certificate, password, methodName, message, headers = []) => {
 	validateParams(url, certificate, password, methodName, message, headers)
 	if (!url.endsWith('?wsdl') && !url.endsWith('?WSDL')) {
 		url += '?wsdl'
@@ -19,14 +19,14 @@ module.exports = async (url, certificate, password, methodName, message, headers
 	})
 }
 
-async function createSoapClient(url, certificate, password, headers) {
+const createSoapClient = async (url, certificate, password, headers) => {
 	const options = {
 		escapeXML: false,
 		returnFault: true,
 		disableCache: true,
 		forceSoap12Headers: true,
 		headers: { 'Content-Type': 'application/soap+xml' },
-		wsdl_options: { pfx: certificate, passphrase: password },
+		wsdl_options: { pfx: certificate, passphrase: password }
 	}
 
 	const client = await soap.createClientAsync(url, options)
@@ -36,7 +36,7 @@ async function createSoapClient(url, certificate, password, headers) {
 	return client
 }
 
-function createSoapMethod(client, methodName) {
+const createSoapMethod = (client, methodName) => {
 	const service = Object.values(client.wsdl.definitions.services)[0]
 	const port = Object.values(service.ports)[0]
 
