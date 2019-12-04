@@ -14,9 +14,7 @@ npm install sefaz-communicator
 const sefaz = require('sefaz-communicator')
 
 const url = 'https://hnfe.sefaz.ba.gov.br/webservices/NFeStatusServico4/NFeStatusServico4.asmx'
-const certificate = Buffer.from('Pfx certificate in base64 string', 'base64')
-const password = 'password'
-const method = 'nfeStatusServicoNF'
+const methodName = 'nfeStatusServicoNF'
 const message = {
    $xml: `<consStatServ xmlns="http://www.portalfiscal.inf.br/nfe" versao="4.00">
             <tpAmb>2</tpAmb>
@@ -25,12 +23,15 @@ const message = {
           </consStatServ>`
 }
 
-const response = await sefaz.communicate(url, certificate, password, method, message)
+const certificate = Buffer.from('Pfx certificate in base64 string', 'base64')
+const password = 'password'
+
+const response = await sefaz.communicate(url, methodName, message, { certificate, password })
 ```
 
 ## API
 
-### communicate(url, certificate, password, method, message, headers)
+### communicate(url, method, message, options)
 
 #### url
 
@@ -38,19 +39,7 @@ Type: `string`
 
 Web service URL
 
-#### certificate
-
-Type: `Buffer`
-
-Pfx Certificate as Buffer
-
-#### password
-
-Type: `string`
-
-Certificate password
-
-#### method
+#### methodName
 
 Type: `string`
 
@@ -67,7 +56,19 @@ or
 
 > message: { nfeDadosMsg: '<?xml>...'}
 
-#### (optional) headers
+#### options.certificate
+
+Type: `Buffer`
+
+Pfx Certificate as Buffer
+
+#### options.password
+
+Type: `string`
+
+Certificate password
+
+#### (optional) options.headers
 
 Type: `string array`
 
@@ -75,3 +76,9 @@ Headers in xml
 
 Example
 > headers: ['`<cteCabecMsg>...</cteCabecMsg>`']
+
+#### (optional) options.httpClient
+
+Type: `http.HttpClient`
+
+Custom node-soap HttpClient

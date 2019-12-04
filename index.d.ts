@@ -1,8 +1,15 @@
+import http from 'soap'
+
+interface SefazCommunicatorOptions {
+	certificate: Buffer
+	password: string
+	headers?: string[]
+	httpClient?: http.HttpClient
+}
+
 export function communicate(
 	url: string,
-	certificate: Buffer,
-	password: string,
 	methodName: string,
 	message: object,
-	headers?: string[]
+	options: SefazCommunicatorOptions
 ): Promise<object>
