@@ -1,10 +1,10 @@
-import http from 'soap'
+import * as soap from 'soap'
 
 interface SefazCommunicatorOptions {
 	certificate: Buffer
 	password: string
 	headers?: string[]
-	httpClient?: http.HttpClient
+	httpClient?: soap.HttpClient
 }
 
 export function communicate(
