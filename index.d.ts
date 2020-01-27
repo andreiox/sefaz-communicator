@@ -5,11 +5,12 @@ interface SefazCommunicatorOptions {
 	password: string
 	headers?: string[]
 	httpClient?: soap.HttpClient
+	escapeXML: boolean
 }
 
 export function communicate(
 	url: string,
 	methodName: string,
 	message: object,
-	options: SefazCommunicatorOptions
+	options: SefazCommunicatorOptions,
 ): Promise<object>

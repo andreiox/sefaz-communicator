@@ -20,13 +20,13 @@ exports.communicate = async (url, methodName, message, options = {}) => {
 
 const createSoapClient = async (url, options) => {
 	const soapOptions = {
-		escapeXML: false,
+		escapeXML: options.escapeXML === true,
 		returnFault: true,
 		disableCache: true,
 		forceSoap12Headers: true,
 		httpClient: options.httpClient,
 		headers: { 'Content-Type': 'application/soap+xml' },
-		wsdl_options: { pfx: options.certificate, passphrase: options.password }
+		wsdl_options: { pfx: options.certificate, passphrase: options.password },
 	}
 
 	const client = await soap.createClientAsync(url, soapOptions)

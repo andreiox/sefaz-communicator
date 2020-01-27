@@ -82,3 +82,9 @@ Example
 Type: `http.HttpClient`
 
 Custom node-soap HttpClient
+
+#### (optional) options.escapeXML
+
+Type: `boolean`
+
+Escape XML message (default: false)
