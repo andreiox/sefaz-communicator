@@ -63,11 +63,11 @@ const validateParams = (url, methodName, message, options) => {
         throw new TypeError(`Expected a object for message, got ${typeof message}`)
     }
 
-    if (!Buffer.isBuffer(options.certificate)) {
+    if (options.certificate && !Buffer.isBuffer(options.certificate)) {
         throw new TypeError(`Expected a Buffer for certificate, got ${typeof options.certificate}`)
     }
 
-    if (typeof options.password !== 'string') {
+    if (options.password && typeof options.password !== 'string') {
         throw new TypeError(`Expected a string for password, got ${typeof options.password}`)
     }
 
