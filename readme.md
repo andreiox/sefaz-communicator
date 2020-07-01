@@ -16,11 +16,11 @@ const sefaz = require('sefaz-communicator')
 const url = 'https://hnfe.sefaz.ba.gov.br/webservices/NFeStatusServico4/NFeStatusServico4.asmx'
 const methodName = 'nfeStatusServicoNF'
 const message = {
-   $xml: `<consStatServ xmlns="http://www.portalfiscal.inf.br/nfe" versao="4.00">
+    $xml: `<consStatServ xmlns="http://www.portalfiscal.inf.br/nfe" versao="4.00">
             <tpAmb>2</tpAmb>
             <cUF>29</cUF>
             <xServ>STATUS</xServ>
-          </consStatServ>`
+          </consStatServ>`,
 }
 
 const certificate = Buffer.from('Pfx certificate in base64 string', 'base64')
@@ -50,19 +50,20 @@ Name of Wsdl Method
 Type: `object`
 
 Examples
-> message: { $xml: '<?xml>...'}
+
+> message: { \$xml: '<?xml>...'}
 
 or
 
 > message: { nfeDadosMsg: '<?xml>...'}
 
-#### options.certificate
+#### (optional) options.certificate
 
 Type: `Buffer`
 
 Pfx Certificate as Buffer
 
-#### options.password
+#### (optional) options.password
 
 Type: `string`
 
@@ -75,6 +76,7 @@ Type: `string array`
 Headers in xml
 
 Example
+
 > headers: ['`<cteCabecMsg>...</cteCabecMsg>`']
 
 #### (optional) options.httpClient
