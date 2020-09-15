@@ -48,3 +48,43 @@ test('TypeError', async t => {
         message: 'Expected a http.HttpClient for options.httpClient',
     })
 })
+
+test('buildSoapOptions - no forceSoap12Headers and contentType', t => {
+    const res = buildSoapOptions({
+        escapeXml: false,
+        httpClient: 'httpClient',
+        certificate: 'pfx',
+        password: 'password'
+    })
+
+    t.deepEqual(res, {
+        escapeXML: false,
+        returnFault: true,
+        disableCache: true,
+        forceSoap12Headers: true,
+        httpClient: 'httpClient',
+        headers: { 'Content-Type': 'application/soap+xml' },
+        wsdl_options: { pfx: 'pfx', passphrase: 'password' },
+    })
+})
+
+test('buildSoapOptions - with forceSoap12Headers and contentType', t => {
+    const res = buildSoapOptions({
+        escapeXml: false,
+        httpClient: 'httpClient',
+        certificate: 'pfx',
+        password: 'password',
+        forceSoap12Headers: false,
+        contentType: 'contentType'
+    })
+
+    t.deepEqual(res, {
+        escapeXML: false,
+        returnFault: true,
+        disableCache: true,
+        forceSoap12Headers: false,
+        httpClient: 'httpClient',
+        headers: { 'Content-Type': 'contentType' },
+        wsdl_options: { pfx: 'pfx', passphrase: 'password' },
+    })
+})
