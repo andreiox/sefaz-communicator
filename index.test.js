@@ -1,5 +1,5 @@
 import test from 'ava'
-import { communicate } from '.'
+import { communicate, buildSoapOptions } from '.'
 
 test('TypeError', async t => {
     t.plan(7)
