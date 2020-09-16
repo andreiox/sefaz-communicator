@@ -31,7 +31,7 @@ exports.buildSoapOptions = (options) => {
 }
 
 const createSoapClient = async (url, options) => {
-    const soapOptions = buildSoapOptions()
+    const soapOptions = buildSoapOptions(options)
 
     const client = await soap.createClientAsync(url, soapOptions)
     client.setSecurity(new soap.ClientSSLSecurityPFX(options.certificate, options.password))
