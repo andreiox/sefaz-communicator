@@ -3,7 +3,7 @@
 const soap = require('soap')
 const http = require('soap')
 
-exports.communicate = async (url, methodName, message, options = {}) => {
+const communicate = async (url, methodName, message, options = {}) => {
     validateParams(url, methodName, message, options)
     if (!url.endsWith('?wsdl') && !url.endsWith('?WSDL')) url += '?wsdl'
 
@@ -18,7 +18,7 @@ exports.communicate = async (url, methodName, message, options = {}) => {
     })
 }
 
-exports.buildSoapOptions = (options) => {
+const buildSoapOptions = (options) => {
     return {
         escapeXML: options.escapeXML === true,
         returnFault: true,
@@ -86,4 +86,9 @@ const validateParams = (url, methodName, message, options) => {
     if (options.httpClient && !(options.httpClient instanceof http.HttpClient)) {
         throw new TypeError('Expected a http.HttpClient for options.httpClient')
     }
+}
+
+module.exports = {
+    buildSoapOptions,
+    communicate,
 }
