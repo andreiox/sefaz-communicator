@@ -47,12 +47,19 @@ const createSoapMethod = (client, methodName, isHttps) => {
     const port = Object.values(service.ports)[0]
 
     const method = port.binding.methods[methodName]
-    let location = port.location.replace(':80', '')
+    const location = formatLocation(port.location, isHttps)
+
+    return client._defineMethod(method, location)
+}
+
+const formatLocation = (location, isHttps) => {
+    location = location.replace(':80', '')
+
     if (isHttps && location.startsWith('http:')) {
         location = location.replace('http:', 'https:')
     }
 
-    return client._defineMethod(method, location)
+    return location
 }
 
 const validateParams = (url, methodName, message, options) => {
