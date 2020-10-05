@@ -7,8 +7,10 @@ const communicate = async (url, methodName, message, options = {}) => {
     validateParams(url, methodName, message, options)
     if (!url.endsWith('?wsdl') && !url.endsWith('?WSDL')) url += '?wsdl'
 
-    const client = await createSoapClient(url, options)
-    const method = createSoapMethod(client, methodName)
+    const isHttps = options.certificate && options.password
+
+    const client = await createSoapClient(url, options, isHttps)
+    const method = createSoapMethod(client, methodName, isHttps)
 
     return new Promise((resolve, reject) => {
         method(message, (err, result) => {
@@ -18,7 +20,27 @@ const communicate = async (url, methodName, message, options = {}) => {
     })
 }
 
-const buildSoapOptions = (options) => {
+const createSoapClient = async (url, options, isHttps) => {
+    const soapOptions = buildSoapOptions(options)
+    const client = await soap.createClientAsync(url, soapOptions)
+
+    if (isHttps) client.setSecurity(new soap.ClientSSLSecurityPFX(options.certificate, options.password))
+    if (options.headers) options.headers.forEach(header => client.addSoapHeader(header))
+
+    return client
+}
+
+const createSoapMethod = (client, methodName, isHttps) => {
+    const service = Object.values(client.wsdl.definitions.services)[0]
+    const port = Object.values(service.ports)[0]
+
+    const method = port.binding.methods[methodName]
+    const location = formatLocation(port.location, isHttps)
+
+    return client._defineMethod(method, location)
+}
+
+const buildSoapOptions = options => {
     return {
         escapeXML: options.escapeXML === true,
         returnFault: true,
@@ -30,28 +52,14 @@ const buildSoapOptions = (options) => {
     }
 }
 
-const createSoapClient = async (url, options) => {
-    const soapOptions = buildSoapOptions(options)
+const formatLocation = (location, isHttps) => {
+    location = location.replace(':80', '')
 
-    const client = await soap.createClientAsync(url, soapOptions)
-    client.setSecurity(new soap.ClientSSLSecurityPFX(options.certificate, options.password))
-
-    if (options.headers) options.headers.forEach(header => client.addSoapHeader(header))
-
-    return client
-}
-
-const createSoapMethod = (client, methodName) => {
-    const service = Object.values(client.wsdl.definitions.services)[0]
-    const port = Object.values(service.ports)[0]
-
-    const method = port.binding.methods[methodName]
-    let location = port.location.replace(':80', '')
-    if (location.startsWith('http:')) {
+    if (isHttps && location.startsWith('http:')) {
         location = location.replace('http:', 'https:')
     }
 
-    return client._defineMethod(method, location)
+    return location
 }
 
 const validateParams = (url, methodName, message, options) => {
@@ -89,6 +97,7 @@ const validateParams = (url, methodName, message, options) => {
 }
 
 module.exports = {
-    buildSoapOptions,
     communicate,
+    buildSoapOptions,
+    formatLocation,
 }
