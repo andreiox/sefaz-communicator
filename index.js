@@ -20,18 +20,6 @@ const communicate = async (url, methodName, message, options = {}) => {
     })
 }
 
-const buildSoapOptions = options => {
-    return {
-        escapeXML: options.escapeXML === true,
-        returnFault: true,
-        disableCache: true,
-        forceSoap12Headers: options.forceSoap12Headers === undefined ? true : options.forceSoap12Headers,
-        httpClient: options.httpClient,
-        headers: { 'Content-Type': options.contentType || 'application/soap+xml' },
-        wsdl_options: { pfx: options.certificate, passphrase: options.password },
-    }
-}
-
 const createSoapClient = async (url, options) => {
     const soapOptions = buildSoapOptions(options)
     const client = await soap.createClientAsync(url, soapOptions)
@@ -50,6 +38,18 @@ const createSoapMethod = (client, methodName, isHttps) => {
     const location = formatLocation(port.location, isHttps)
 
     return client._defineMethod(method, location)
+}
+
+const buildSoapOptions = options => {
+    return {
+        escapeXML: options.escapeXML === true,
+        returnFault: true,
+        disableCache: true,
+        forceSoap12Headers: options.forceSoap12Headers === undefined ? true : options.forceSoap12Headers,
+        httpClient: options.httpClient,
+        headers: { 'Content-Type': options.contentType || 'application/soap+xml' },
+        wsdl_options: { pfx: options.certificate, passphrase: options.password },
+    }
 }
 
 const formatLocation = (location, isHttps) => {
