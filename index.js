@@ -97,6 +97,7 @@ const validateParams = (url, methodName, message, options) => {
 }
 
 module.exports = {
-    buildSoapOptions,
     communicate,
+    buildSoapOptions,
+    formatLocation,
 }

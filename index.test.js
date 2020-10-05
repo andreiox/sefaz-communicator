@@ -1,5 +1,5 @@
 import test from 'ava'
-import { communicate, buildSoapOptions } from '.'
+import { communicate, buildSoapOptions, formatLocation } from '.'
 
 test('TypeError', async t => {
     t.plan(7)
@@ -54,7 +54,7 @@ test('buildSoapOptions - no forceSoap12Headers and contentType', t => {
         escapeXml: false,
         httpClient: 'httpClient',
         certificate: 'pfx',
-        password: 'password'
+        password: 'password',
     })
 
     t.deepEqual(res, {
@@ -75,7 +75,7 @@ test('buildSoapOptions - with forceSoap12Headers and contentType', t => {
         certificate: 'pfx',
         password: 'password',
         forceSoap12Headers: false,
-        contentType: 'contentType'
+        contentType: 'contentType',
     })
 
     t.deepEqual(res, {
@@ -87,4 +87,36 @@ test('buildSoapOptions - with forceSoap12Headers and contentType', t => {
         headers: { 'Content-Type': 'contentType' },
         wsdl_options: { pfx: 'pfx', passphrase: 'password' },
     })
+})
+
+test('formatLocation - http location with port 80 and isHttps true', t => {
+    const location = 'http://foo.com:80/bar'
+    const expected = 'https://foo.com/bar'
+
+    const result = formatLocation(location, true)
+    t.is(result, expected)
+})
+
+test('formatLocation - http location with port 80 and isHttps false', t => {
+    const location = 'http://foo.com:80/bar'
+    const expected = 'http://foo.com/bar'
+
+    const result = formatLocation(location, false)
+    t.is(result, expected)
+})
+
+test('formatLocation - http location and isHttps true', t => {
+    const location = 'http://foo.com/bar'
+    const expected = 'https://foo.com/bar'
+
+    const result = formatLocation(location, true)
+    t.is(result, expected)
+})
+
+test('formatLocation - https location with port 80 and isHttps true', t => {
+    const location = 'https://foo.com:80/bar'
+    const expected = 'https://foo.com/bar'
+
+    const result = formatLocation(location, true)
+    t.is(result, expected)
 })
