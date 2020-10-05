@@ -20,7 +20,7 @@ const communicate = async (url, methodName, message, options = {}) => {
     })
 }
 
-const createSoapClient = async (url, options) => {
+const createSoapClient = async (url, options, isHttps) => {
     const soapOptions = buildSoapOptions(options)
     const client = await soap.createClientAsync(url, soapOptions)
 
