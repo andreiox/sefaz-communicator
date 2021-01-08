@@ -53,7 +53,7 @@ const buildSoapOptions = options => {
 }
 
 const formatLocation = (location, isHttps) => {
-    location = location.replace(':80', '')
+    location = location.replace(/:80[\/]?$/, '')
 
     if (isHttps && location.startsWith('http:')) {
         location = location.replace('http:', 'https:')
