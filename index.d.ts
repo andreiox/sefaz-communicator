@@ -5,9 +5,10 @@ interface SefazCommunicatorOptions {
     password?: string
     headers?: string[]
     httpClient?: soap.HttpClient
-    escapeXML: boolean,
-    forceSoap12Headers?: boolean,
+    escapeXML: boolean
+    forceSoap12Headers?: boolean
     contentType?: string
+    proxy?: string
 }
 
 export function communicate(
