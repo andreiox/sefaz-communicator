@@ -2,6 +2,7 @@
 
 const soap = require('soap')
 const http = require('soap')
+const request = require('request')
 
 const communicate = async (url, methodName, message, options = {}) => {
     validateParams(url, methodName, message, options)
@@ -13,10 +14,12 @@ const communicate = async (url, methodName, message, options = {}) => {
     const method = createSoapMethod(client, methodName, isHttps)
 
     return new Promise((resolve, reject) => {
-        method(message, (err, result) => {
+        const callback = (err, result) => {
             if (err) return reject(err)
             resolve(result)
-        })
+        }
+
+        method(message, callback)
     })
 }
 
@@ -41,6 +44,10 @@ const createSoapMethod = (client, methodName, isHttps) => {
 }
 
 const buildSoapOptions = options => {
+    const req = options.proxy
+        ? request.defaults({ proxy: options.proxy, timeout: 5000, connection: 'keep-alive' })
+        : undefined
+
     return {
         escapeXML: options.escapeXML === true,
         returnFault: true,
@@ -49,6 +56,7 @@ const buildSoapOptions = options => {
         httpClient: options.httpClient,
         headers: { 'Content-Type': options.contentType || 'application/soap+xml' },
         wsdl_options: { pfx: options.certificate, passphrase: options.password },
+        request: req,
     }
 }
 
@@ -93,6 +101,10 @@ const validateParams = (url, methodName, message, options) => {
 
     if (options.httpClient && !(options.httpClient instanceof http.HttpClient)) {
         throw new TypeError('Expected a http.HttpClient for options.httpClient')
+    }
+
+    if (options.proxy && typeof options.proxy !== 'string') {
+        throw new TypeError(`Expected a string for proxy, got ${typeof options.proxy}`)
     }
 }
 
