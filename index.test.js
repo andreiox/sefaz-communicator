@@ -49,6 +49,15 @@ test('TypeError', async t => {
     })
 })
 
+test('TypeError options.proxy', async t => {
+    const options = { proxy: 1 }
+
+    await t.throwsAsync(communicate('string', 'methodName', { $xml: 'message' }, options), {
+        instanceOf: TypeError,
+        message: 'Expected a string for proxy, got number',
+    })
+})
+
 test('buildSoapOptions - no forceSoap12Headers and contentType', t => {
     const res = buildSoapOptions({
         escapeXml: false,
@@ -65,6 +74,7 @@ test('buildSoapOptions - no forceSoap12Headers and contentType', t => {
         httpClient: 'httpClient',
         headers: { 'Content-Type': 'application/soap+xml' },
         wsdl_options: { pfx: 'pfx', passphrase: 'password' },
+        request: undefined,
     })
 })
 
@@ -86,6 +96,7 @@ test('buildSoapOptions - with forceSoap12Headers and contentType', t => {
         httpClient: 'httpClient',
         headers: { 'Content-Type': 'contentType' },
         wsdl_options: { pfx: 'pfx', passphrase: 'password' },
+        request: undefined,
     })
 })
 
