@@ -51,7 +51,7 @@ const buildSoapOptions = options => {
   const req = options.proxy
     ? request.defaults({
         proxy: options.proxy,
-        timeout: 5000,
+        timeout: 20000,
         connection: 'keep-alive',
       })
     : undefined;
