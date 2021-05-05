@@ -50,9 +50,10 @@ const createSoapMethod = (client, methodName, isHttps) => {
 const buildSoapOptions = options => {
   const req = options.proxy
     ? request.defaults({
-        proxy: options.proxy,
         timeout: 20000,
-        connection: 'keep-alive',
+        proxy: options.proxy,
+        agent: false,
+        pool: { maxSockets: 200 },
       })
     : undefined;
 
