@@ -1,6 +1,6 @@
 import test from 'ava';
 
-import { communicate, buildSoapOptions, formatLocation } from '.';
+import { communicate, buildSoapOptions, formatLocation, formatUrl } from '.';
 
 test('TypeError', async t => {
   t.plan(7);
@@ -154,4 +154,26 @@ test('formatLocation - https location with port 8080 and isHttps true', t => {
 
   const result = formatLocation(location, true);
   t.is(result, expected);
+});
+
+test('formatUrl', t => {
+  let url = 'https://example.com?wsdl';
+  let result = formatUrl(url);
+
+  t.is(result, url);
+
+  url = 'https://example.com?singleWsdl';
+  result = formatUrl(url);
+
+  t.is(result, url);
+
+  url = 'https://example.com?WSDL';
+  result = formatUrl(url);
+
+  t.is(result, url);
+
+  url = 'https://example.com';
+  result = formatUrl(url);
+
+  t.is(result, `${url}?wsdl`);
 });
