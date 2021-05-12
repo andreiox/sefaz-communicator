@@ -6,11 +6,11 @@ const request = require('request');
 
 const communicate = async (url, methodName, message, options = {}) => {
   validateParams(url, methodName, message, options);
-  if (!url.endsWith('?wsdl') && !url.endsWith('?WSDL')) url += '?wsdl';
 
+  const formattedUrl = formatUrl(url);
   const isHttps = options.certificate && options.password;
 
-  const client = await createSoapClient(url, options, isHttps);
+  const client = await createSoapClient(formattedUrl, options, isHttps);
   const method = createSoapMethod(client, methodName, isHttps);
 
   return new Promise((resolve, reject) => {
@@ -80,6 +80,12 @@ const formatLocation = (location, isHttps) => {
   return location;
 };
 
+const formatUrl = url => {
+  if (/^.*[?]{1}.*(wsdl|WSDL|Wsdl){1}$/.test(url) === false) return `${url}?wsdl`;
+
+  return url;
+};
+
 const validateParams = (url, methodName, message, options) => {
   if (typeof url !== 'string') {
     throw new TypeError(`Expected a string for url, got ${typeof url}`);
@@ -128,4 +134,5 @@ module.exports = {
   communicate,
   buildSoapOptions,
   formatLocation,
+  formatUrl,
 };
