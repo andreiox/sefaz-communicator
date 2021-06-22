@@ -9,7 +9,7 @@ interface SefazCommunicatorOptions {
   forceSoap12Headers?: boolean;
   contentType?: string;
   proxy?: string;
-  formatLocation?: (location: string, isHttps: boolean) => string;
+  customFormatLocation?: (location: string, isHttps: boolean) => string;
 }
 
 export function communicate(
