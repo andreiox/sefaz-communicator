@@ -1,6 +1,6 @@
 import test from 'ava';
 
-import { communicate, buildSoapOptions, formatLocation, formatUrl } from '.';
+import { communicate, buildSoapOptions, defaultFormatLocation, formatUrl } from '.';
 
 test('TypeError', async t => {
   t.plan(7);
@@ -116,43 +116,43 @@ test('buildSoapOptions - with forceSoap12Headers and contentType', t => {
   });
 });
 
-test('formatLocation - http location with port 80 and isHttps true', t => {
+test('defaultFormatLocation - http location with port 80 and isHttps true', t => {
   const location = 'http://foo.com:80/bar';
   const expected = 'https://foo.com/bar';
 
-  const result = formatLocation(location, true);
+  const result = defaultFormatLocation(location, true);
   t.is(result, expected);
 });
 
-test('formatLocation - http location with port 80 and isHttps false', t => {
+test('defaultFormatLocation - http location with port 80 and isHttps false', t => {
   const location = 'http://foo.com:80/bar';
   const expected = 'http://foo.com/bar';
 
-  const result = formatLocation(location, false);
+  const result = defaultFormatLocation(location, false);
   t.is(result, expected);
 });
 
-test('formatLocation - http location and isHttps true', t => {
+test('defaultFormatLocation - http location and isHttps true', t => {
   const location = 'http://foo.com/bar';
   const expected = 'https://foo.com/bar';
 
-  const result = formatLocation(location, true);
+  const result = defaultFormatLocation(location, true);
   t.is(result, expected);
 });
 
-test('formatLocation - https location with port 80 and isHttps true', t => {
+test('defaultFormatLocation - https location with port 80 and isHttps true', t => {
   const location = 'https://foo.com:80/bar';
   const expected = 'https://foo.com/bar';
 
-  const result = formatLocation(location, true);
+  const result = defaultFormatLocation(location, true);
   t.is(result, expected);
 });
 
-test('formatLocation - https location with port 8080 and isHttps true', t => {
+test('defaultFormatLocation - https location with port 8080 and isHttps true', t => {
   const location = 'https://foo.com:8080/bar';
   const expected = 'https://foo.com:8080/bar';
 
-  const result = formatLocation(location, true);
+  const result = defaultFormatLocation(location, true);
   t.is(result, expected);
 });
 
