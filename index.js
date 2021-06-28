@@ -42,7 +42,7 @@ const createSoapMethod = (client, methodName, isHttps, customFormatLocation) => 
   const port = Object.values(service.ports)[0];
 
   const method = port.binding.methods[methodName];
-  const location = customFormatLocation ? customFormatLocation(port.location, isHttps) : defaultFormatLocation(port.location, isHttps);
+  const location = formatLocation(port.location, isHttps, customFormatLocation);
 
   return client._defineMethod(method, location);
 };
@@ -70,14 +70,14 @@ const buildSoapOptions = options => {
   };
 };
 
-const defaultFormatLocation = (location, isHttps) => {
+const formatLocation = (location, isHttps, customFormatLocation) => {
   location = location.replace(/:80[\/]/, '/');
 
   if (isHttps && location.startsWith('http:')) {
     location = location.replace('http:', 'https:');
   }
 
-  return location;
+  return customFormatLocation ? customFormatLocation(location) : location;
 };
 
 const formatUrl = url => {
@@ -133,6 +133,6 @@ const validateParams = (url, methodName, message, options) => {
 module.exports = {
   communicate,
   buildSoapOptions,
-  defaultFormatLocation,
+  formatLocation,
   formatUrl,
 };
