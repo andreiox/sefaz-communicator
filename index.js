@@ -11,7 +11,12 @@ const communicate = async (url, methodName, message, options = {}) => {
   const isHttps = options.certificate && options.password;
 
   const client = await createSoapClient(formattedUrl, options, isHttps);
-  const method = createSoapMethod(client, methodName, isHttps, options.customFormatLocation);
+  const method = createSoapMethod(
+    client,
+    methodName,
+    isHttps,
+    options.customFormatLocation,
+  );
 
   return new Promise((resolve, reject) => {
     const callback = (err, result) => {
@@ -50,11 +55,11 @@ const createSoapMethod = (client, methodName, isHttps, customFormatLocation) => 
 const buildSoapOptions = options => {
   const req = options.proxy
     ? request.defaults({
-      timeout: 20000,
-      proxy: options.proxy,
-      agent: false,
-      pool: { maxSockets: 200 },
-    })
+        timeout: 20000,
+        proxy: options.proxy,
+        agent: false,
+        pool: { maxSockets: 200 },
+      })
     : undefined;
 
   return {
