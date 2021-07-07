@@ -156,6 +156,14 @@ test('formatLocation - https location with port 8080 and isHttps true', t => {
   t.is(result, expected);
 });
 
+test('formatLocation - custom location', t => {
+  const location = 'http://foo.com:8080/bar';
+  const expected = 'https://foo.com:8080/barteste';
+
+  const result = formatLocation(location, true, (str) => `${str}teste`);
+  t.is(result, expected);
+});
+
 test('formatUrl', t => {
   let url = 'https://example.com?wsdl';
   let result = formatUrl(url);

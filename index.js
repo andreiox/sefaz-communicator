@@ -11,7 +11,7 @@ const communicate = async (url, methodName, message, options = {}) => {
   const isHttps = options.certificate && options.password;
 
   const client = await createSoapClient(formattedUrl, options, isHttps);
-  const method = createSoapMethod(client, methodName, isHttps);
+  const method = createSoapMethod(client, methodName, isHttps, options.customFormatLocation);
 
   return new Promise((resolve, reject) => {
     const callback = (err, result) => {
@@ -37,12 +37,12 @@ const createSoapClient = async (url, options, isHttps) => {
   return client;
 };
 
-const createSoapMethod = (client, methodName, isHttps) => {
+const createSoapMethod = (client, methodName, isHttps, customFormatLocation) => {
   const service = Object.values(client.wsdl.definitions.services)[0];
   const port = Object.values(service.ports)[0];
 
   const method = port.binding.methods[methodName];
-  const location = formatLocation(port.location, isHttps);
+  const location = formatLocation(port.location, isHttps, customFormatLocation);
 
   return client._defineMethod(method, location);
 };
@@ -50,11 +50,11 @@ const createSoapMethod = (client, methodName, isHttps) => {
 const buildSoapOptions = options => {
   const req = options.proxy
     ? request.defaults({
-        timeout: 20000,
-        proxy: options.proxy,
-        agent: false,
-        pool: { maxSockets: 200 },
-      })
+      timeout: 20000,
+      proxy: options.proxy,
+      agent: false,
+      pool: { maxSockets: 200 },
+    })
     : undefined;
 
   return {
@@ -70,14 +70,14 @@ const buildSoapOptions = options => {
   };
 };
 
-const formatLocation = (location, isHttps) => {
+const formatLocation = (location, isHttps, customFormatLocation) => {
   location = location.replace(/:80[\/]/, '/');
 
   if (isHttps && location.startsWith('http:')) {
     location = location.replace('http:', 'https:');
   }
 
-  return location;
+  return customFormatLocation ? customFormatLocation(location) : location;
 };
 
 const formatUrl = url => {
