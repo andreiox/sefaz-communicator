@@ -10,6 +10,7 @@ interface SefazCommunicatorOptions {
   contentType?: string;
   proxy?: string;
   customFormatLocation?: (location: string) => string;
+  rawResponse?: boolean;
 }
 
 export function communicate(
@@ -17,4 +18,4 @@ export function communicate(
   methodName: string,
   message: object,
   options: SefazCommunicatorOptions,
-): Promise<object>;
+): Promise<Record<string, unknown> | string>;
