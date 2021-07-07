@@ -126,4 +126,4 @@ Function to format location that the method is called
 
 Type: `boolean`
 
-If true, returns raw XML response
+If true, returns raw XML response (default: false)
