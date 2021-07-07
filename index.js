@@ -19,9 +19,10 @@ const communicate = async (url, methodName, message, options = {}) => {
   );
 
   return new Promise((resolve, reject) => {
-    const callback = (err, result) => {
+    const callback = (err, result, rawResponse) => {
       if (err) return reject(err);
-      resolve(result);
+
+      options.rawResponse ? resolve(rawResponse) : resolve(result);
     };
 
     method(message, callback);
