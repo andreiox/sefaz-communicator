@@ -1,14 +1,17 @@
-# sefaz-communicator
+sefaz-communicator
+==================
 
 > Simple way to communicate with SEFAZ SOAP web services
 
-## Install
+Install
+-------
 
 ```shell
 npm install sefaz-communicator
 ```
 
-## Usage
+Usage
+-----
 
 ```js
 const sefaz = require('sefaz-communicator')
@@ -32,7 +35,8 @@ const response = await sefaz.communicate(url, methodName, message, {
 })
 ```
 
-## API
+API
+---
 
 ### communicate(url, method, message, options)
 
@@ -111,3 +115,9 @@ Communication content type (default: application/soap+xml)
 Type: `string`
 
 Proxy url to use in the communication
+
+#### (optional) options.customFormatLocation
+
+Type: `Function`
+
+Function to format location that the method is called
