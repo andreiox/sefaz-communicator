@@ -11,12 +11,18 @@ const communicate = async (url, methodName, message, options = {}) => {
   const isHttps = options.certificate && options.password;
 
   const client = await createSoapClient(formattedUrl, options, isHttps);
-  const method = createSoapMethod(client, methodName, isHttps, options.customFormatLocation);
+  const method = createSoapMethod(
+    client,
+    methodName,
+    isHttps,
+    options.customFormatLocation,
+  );
 
   return new Promise((resolve, reject) => {
-    const callback = (err, result) => {
+    const callback = (err, result, rawResponse) => {
       if (err) return reject(err);
-      resolve(result);
+
+      options.rawResponse ? resolve(rawResponse) : resolve(result);
     };
 
     method(message, callback);
@@ -50,11 +56,11 @@ const createSoapMethod = (client, methodName, isHttps, customFormatLocation) => 
 const buildSoapOptions = options => {
   const req = options.proxy
     ? request.defaults({
-      timeout: 20000,
-      proxy: options.proxy,
-      agent: false,
-      pool: { maxSockets: 200 },
-    })
+        timeout: 20000,
+        proxy: options.proxy,
+        agent: false,
+        pool: { maxSockets: 200 },
+      })
     : undefined;
 
   return {
@@ -127,6 +133,12 @@ const validateParams = (url, methodName, message, options) => {
 
   if (options.proxy && typeof options.proxy !== 'string') {
     throw new TypeError(`Expected a string for proxy, got ${typeof options.proxy}`);
+  }
+
+  if (options.rawResponse && typeof options.rawResponse !== 'boolean') {
+    throw new TypeError(
+      `Expected a boolean for rawResponse, got ${typeof options.rawResponse}`,
+    );
   }
 };
 
