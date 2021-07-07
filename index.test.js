@@ -74,6 +74,18 @@ test('TypeError options.proxy', async t => {
   );
 });
 
+test('TypeError options.rawResponse', async t => {
+  const options = { rawResponse: 1 };
+
+  await t.throwsAsync(
+    communicate('string', 'methodName', { $xml: 'message' }, options),
+    {
+      instanceOf: TypeError,
+      message: 'Expected a boolean for rawResponse, got number',
+    },
+  );
+});
+
 test('buildSoapOptions - no forceSoap12Headers and contentType', t => {
   const res = buildSoapOptions({
     escapeXml: false,
@@ -160,7 +172,7 @@ test('formatLocation - custom location', t => {
   const location = 'http://foo.com:8080/bar';
   const expected = 'https://foo.com:8080/barteste';
 
-  const result = formatLocation(location, true, (str) => `${str}teste`);
+  const result = formatLocation(location, true, str => `${str}teste`);
   t.is(result, expected);
 });
 
