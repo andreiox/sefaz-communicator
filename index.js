@@ -134,6 +134,12 @@ const validateParams = (url, methodName, message, options) => {
   if (options.proxy && typeof options.proxy !== 'string') {
     throw new TypeError(`Expected a string for proxy, got ${typeof options.proxy}`);
   }
+
+  if (options.rawResponse && typeof options.rawResponse !== 'boolean') {
+    throw new TypeError(
+      `Expected a boolean for rawResponse, got ${typeof options.rawResponse}`,
+    );
+  }
 };
 
 module.exports = {
