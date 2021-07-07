@@ -121,3 +121,9 @@ Proxy url to use in the communication
 Type: `Function`
 
 Function to format location that the method is called
+
+#### (optional) options.rawResponse
+
+Type: `boolean`
+
+If true, returns raw XML response
