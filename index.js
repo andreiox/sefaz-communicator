@@ -45,8 +45,9 @@ const createSoapClient = async (url, options, isHttps) => {
 
 const createSoapMethod = (client, methodName, isHttps, customFormatLocation) => {
   const service = Object.values(client.wsdl.definitions.services)[0];
-  const port = Object.values(service.ports)[0];
-
+  const port = Object.values(service.ports).find(port => port.binding.methods[methodName]);
+  if(port === undefined)
+    throw new Error(`Method: '${methodName}' does not exist in wsdl'`);
   const method = port.binding.methods[methodName];
   const location = formatLocation(port.location, isHttps, customFormatLocation);
 
